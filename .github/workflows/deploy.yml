@@ -1,0 +1,36 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: repo
+
+      - name: Deploy
+        run: |
+          DEPLOY_DIR=/home/evangelion/xml-flow
+
+          # Clone or pull repo files
+          if [ ! -d "$DEPLOY_DIR" ]; then
+            mkdir -p "$DEPLOY_DIR"
+            cp -r repo/. "$DEPLOY_DIR/"
+          else
+            cp -r repo/. "$DEPLOY_DIR/"
+          fi
+
+          cd "$DEPLOY_DIR"
+
+          # Bring up containers (build if changed)
+          docker compose down
+          docker compose up -d --build
+
+          # Wait for app to be healthy
+          sleep 10
+          docker compose ps
