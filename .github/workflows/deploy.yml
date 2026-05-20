@@ -26,13 +26,9 @@ jobs:
         run: |
           DEPLOY_DIR=/home/evangelion/xml-flow
 
-          # Clone or pull repo files
-          if [ ! -d "$DEPLOY_DIR" ]; then
-            mkdir -p "$DEPLOY_DIR"
-            cp -r repo/. "$DEPLOY_DIR/"
-          else
-            cp -r repo/. "$DEPLOY_DIR/"
-          fi
+          # Sync repo files (exclude .git)
+          mkdir -p "$DEPLOY_DIR"
+          rsync -a --exclude='.git' repo/ "$DEPLOY_DIR/"
 
           cd "$DEPLOY_DIR"
 
