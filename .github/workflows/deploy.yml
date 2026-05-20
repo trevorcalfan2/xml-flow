@@ -7,6 +7,8 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
+    env:
+      PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
     steps:
       - name: Checkout
         uses: actions/checkout@v4
