@@ -15,6 +15,13 @@ jobs:
         with:
           path: repo
 
+      - name: Debug
+        run: |
+          echo "USER: $(whoami)"
+          echo "GROUPS: $(groups)"
+          echo "DOCKER: $(which docker || echo NOT FOUND)"
+          docker ps 2>&1 | head -3
+
       - name: Deploy
         run: |
           DEPLOY_DIR=/home/evangelion/xml-flow
