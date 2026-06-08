@@ -239,6 +239,25 @@ function renderResults(d, docId, xml) {
     document.getElementById('f-docid').value  = docId;
     document.getElementById('xml-preview').textContent = xml.substring(0, 600) + (xml.length > 600 ? '\n[... ' + xml.length + ' chars total, clic para ver completo]' : '');
     document.getElementById('xml-modal-body').textContent = xml;
+
+    checkDuplicateEmission(docId);
+}
+
+async function checkDuplicateEmission(docId) {
+    const btn  = document.getElementById('emit-btn');
+    const rBox = document.getElementById('resp-box');
+    try {
+        const r    = await fetch('/api/emissions');
+        const list = await r.json();
+        const prev = list.find(e => e.status === 'OK' && (e.serie + '-' + e.numero) === docId);
+        if (prev) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>Ya emitido — ver historial';
+            rBox.style.display = '';
+            rBox.className = 'resp-box mt-3 err';
+            rBox.textContent = 'ADVERTENCIA: Este comprobante (' + docId + ') ya fue emitido exitosamente el ' + (prev.created_at || '').substring(0, 16).replace('T', ' ') + '. No se puede volver a emitir.';
+        }
+    } catch (_) {}
 }
 
 /* ─── XML Modal ─── */
