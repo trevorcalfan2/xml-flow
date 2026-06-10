@@ -21,6 +21,9 @@ services:
       DB_PASSWORD: xmlflow123
       SESSION_SAME_SITE: none
       SESSION_SECURE_COOKIE: "false"
+      APP_KEY: "base64:I3lQSceNYVdgix/Hp28txPfH5IP5LQx1MWv7w8lkrHI="
+      APP_ENV: production
+      APP_DEBUG: "false"
 
   db:
     image: mysql:8.0
