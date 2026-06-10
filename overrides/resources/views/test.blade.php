@@ -22,7 +22,7 @@
             </div>
             <div class="mb-3">
                 <label class="form-label small fw-bold">datos (XML)</label>
-                <textarea id="t-datos" class="form-control form-control-sm" rows="3" style="font-family:monospace;font-size:11px;"><?xml version="1.0" encoding="ISO-8859-1"?><test/></textarea>
+                <textarea id="t-datos" class="form-control form-control-sm" rows="3" style="font-family:monospace;font-size:11px;">{{ htmlspecialchars_decode('&lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;&lt;test/&gt;') }}</textarea>
             </div>
             <button class="btn btn-primary btn-sm" onclick="runTest()">Probar conexión</button>
         </div>
