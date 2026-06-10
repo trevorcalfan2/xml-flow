@@ -414,8 +414,18 @@ function copyXml(btn) {
     });
 }
 
+async function refreshCsrfToken() {
+    try {
+        const r = await fetch('/csrf-token');
+        const j = await r.json();
+        document.querySelector('meta[name=csrf-token]').setAttribute('content', j.token);
+    } catch (_) {}
+}
+
 /* ─── Emit ─── */
 async function emitir() {
+    await refreshCsrfToken();
+
     const btn    = document.getElementById('emit-btn');
     const pWrap  = document.getElementById('emit-progress-wrap');
     const rBox   = document.getElementById('resp-box');
