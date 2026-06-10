@@ -13,6 +13,52 @@ class XmlController extends Controller
         return view('index');
     }
 
+    public function testView()
+    {
+        return view('test');
+    }
+
+    public function testConnection(Request $request)
+    {
+        $target  = 'http://192.168.1.149:5002/ca4xml';
+        $comando = $request->input('comando', 'emitir');
+        $docid   = $request->input('docid', 'TEST-00000001');
+        $datos   = $request->input('datos', '<?xml version="1.0"?><test/>');
+        $log     = [];
+
+        $log[] = '[' . now() . '] Iniciando test de conexión';
+        $log[] = "Target: $target";
+        $log[] = "Comando: $comando | Docid: $docid";
+
+        try {
+            $log[] = 'Enviando POST...';
+            $response = Http::timeout(10)
+                ->asForm()
+                ->post($target, [
+                    'datos'   => mb_convert_encoding($datos, 'ISO-8859-1', 'UTF-8'),
+                    'comando' => $comando,
+                    'docid'   => $docid,
+                ]);
+            $log[] = 'HTTP Status: ' . $response->status();
+            $log[] = 'Response body: ' . $response->body();
+            return response()->json([
+                'ok'      => true,
+                'status'  => $response->status(),
+                'body'    => $response->body(),
+                'log'     => $log,
+            ]);
+        } catch (\Exception $e) {
+            $log[] = 'EXCEPTION: ' . $e->getMessage();
+            $log[] = 'Class: ' . get_class($e);
+            return response()->json([
+                'ok'    => false,
+                'error' => $e->getMessage(),
+                'class' => get_class($e),
+                'log'   => $log,
+            ], 502);
+        }
+    }
+
     public function process(Request $request)
     {
         $raw = null;
